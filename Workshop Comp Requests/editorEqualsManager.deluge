@@ -1,0 +1,29 @@
+deluge
+//Replace the UDF field key values
+const managerNameKey = "txt_manager_name";
+
+
+//Fetch the manager from the form submission using the UDF field key
+manager = requestObj.get("udf_fields").get(managerNameKey);
+
+
+//Check if the manager is present and not empty
+if(manager && manager.value){
+    //Set the editor field equal to the Manager using an api call
+    apiPrefix = "/app/" + context.get("instance") + "/api/v3/";
+    updateEditor = zoho.sdp.invokeurl
+    [
+        url :apiPrefix + "requests/" + requestObj.get("id")
+        type :PUT
+        parameters:{"input_data":{"request":{"editor":{"name":manager.value}}}}
+    ];
+    parameters: {
+            "input_data": {
+                "request": {
+                    "editor": {
+                        "name": manager.value}}}}]);
+
+    //Debug output: show status of the API call to update the editor
+    info updateEditor;
+    info updateEditor.get("response_status");
+}
