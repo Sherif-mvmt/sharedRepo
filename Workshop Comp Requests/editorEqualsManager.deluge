@@ -14,15 +14,9 @@ if(manager && manager.value){
     updateEditor = zoho.sdp.invokeurl
     [
         url :apiPrefix + "requests/" + requestObj.get("id")
-        type :PUT
+        type:PUT
         parameters:{"input_data":{"request":{"editor":{"name":manager.value}}}}
     ];
-    parameters: {
-            "input_data": {
-                "request": {
-                    "editor": {
-                        "name": manager.value}}}}]);
-
     //Debug output: show status of the API call to update the editor
     info updateEditor;
     info updateEditor.get("response_status");
