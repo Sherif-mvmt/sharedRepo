@@ -1,23 +1,18 @@
-deluge
-//Replace the UDF field key values
-const managerNameKey = "txt_manager_name";
-
-
-//Fetch the manager from the form submission using the UDF field key
-manager = requestObj.get("udf_fields").get(managerNameKey);
-
-
-//Check if the manager is present and not empty
-if(manager && manager.value){
-    //Set the editor field equal to the Manager using an api call
-    apiPrefix = "/app/" + context.get("instance") + "/api/v3/";
-    updateEditor = zoho.sdp.invokeurl
-    [
-        url :apiPrefix + "requests/" + requestObj.get("id")
-        type:PUT
-        parameters:{"input_data":{"request":{"editor":{"name":manager.value}}}}
-    ];
-    //Debug output: show status of the API call to update the editor
-    info updateEditor;
-    info updateEditor.get("response_status");
-}
+//CONFIG START
+userLookupKey = "udf_ref4";
+// User lookup additional field key whose value should be copied to editor
+//CONFIG END
+apiPrefix = "/app/" + context.get("instance") + "/api/v3/";
+requestId = requestObj.get("id");
+// ── 1. Read the user lookup UDF ──────────────────────────────────────────
+udfFields = requestObj.get("udf_fields");
+selectedUser = udfFields.get(userLookupKey);
+selectedUserId = selectedUser.get("id");
+// ── 2. Set editor to the selected user via PUT ────────────────────────────
+updateResp = zoho.sdp.invokeurl
+[
+    url :apiPrefix + "requests/" + requestId
+    type :PUT
+    parameters:{"input_data":{"request":{"editor":{"id":selectedUserId}}}}
+];
+info "Copy UDF to Editor — Response: " + updateResp.get("response_status");
